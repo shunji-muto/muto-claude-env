@@ -71,43 +71,15 @@ if ! command -v apm >/dev/null 2>&1; then
   exit 1
 fi
 
-# 3. muto-claude-env 展開 (public repo、認証不要)
-# --global で ~/.apm/ にインストールし ~/.claude/agents/ ~/.claude/skills/ へ展開させる。
-# 省略するとカレントディレクトリの .claude/ に展開されて Claude Code が拾わない。
-# 展開先ディレクトリを事前に作らないと apm が primitive を skip する（skills 側は既存で
-# agents 側だけ未作成のケースで agents だけ展開されない現象を実測 2026-07-22）。
-mkdir -p "$HOME/.claude/agents" "$HOME/.claude/skills"
-log 'installing shunji-muto/muto-claude-env (global scope)'
-apm install --global shunji-muto/muto-claude-env --target claude
-# 展開結果の可視化（Routine ログで agents/skills が入ったか確認できるように）
+# 3. muto-claude-env 展開
+# --global で ~/.apm/ にインストールし ~/.claude/agents/ ~/.claude/skills/ へ hoist させる。
+# --force は既存 deploy との衝突 (Errno 17) を回避（冪等再実行のため）。
+log 'installing shunji-muto/muto-claude-env'
+apm install --global --force shunji-muto/muto-claude-env --target claude
 log "installed agents: $(ls -1 "$HOME/.claude/agents" 2>/dev/null | wc -l | tr -d ' ')"
 log "installed skills: $(ls -1 "$HOME/.claude/skills" 2>/dev/null | wc -l | tr -d ' ')"
 
-# 4. ~/.claude/skills/create-routine-issue を muto-claude-env 展開先へ symlink
-# apm の展開先パス取得手段は実装時点で未確定。以下を順に試す。
-APM_PKG_ROOT=''
-if apm show muto-claude-env --path >/dev/null 2>&1; then
-  APM_PKG_ROOT="$(apm show muto-claude-env --path 2>/dev/null || true)"
-fi
-if [[ -z "$APM_PKG_ROOT" ]]; then
-  # フォールバック: apm のデフォルト展開先候補
-  for candidate in "$HOME/.apm/muto-claude-env" "$HOME/.apm/packages/muto-claude-env" "$HOME/.local/share/apm/muto-claude-env"; do
-    if [[ -d "$candidate" ]]; then
-      APM_PKG_ROOT="$candidate"
-      break
-    fi
-  done
-fi
-if [[ -z "$APM_PKG_ROOT" ]]; then
-  warn 'could not locate apm package root for muto-claude-env; skipping symlink.'
-else
-  mkdir -p "$HOME/.claude/skills"
-  ln -sfn "$APM_PKG_ROOT/skills/create-routine-issue" \
-          "$HOME/.claude/skills/create-routine-issue"
-  log "symlink created: ~/.claude/skills/create-routine-issue -> $APM_PKG_ROOT/skills/create-routine-issue"
-fi
-
-# 5. env 警告 (fail はしない)
+# 4. env 警告 (fail はしない)
 for var in CONTEXT7_API_KEY; do
   if [[ -z "${!var:-}" ]]; then
     warn "$var is not set. Some MCP servers may not work."
