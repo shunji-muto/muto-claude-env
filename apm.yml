@@ -1,0 +1,35 @@
+name: muto-claude-env
+version: 1.0.0
+description: APM project for muto-claude-env
+author: shunji.muto
+# Which agent platforms to deploy to.
+# Resolution order: --target flag > this field > auto-detect from filesystem.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, kiro, opencode, windsurf
+targets:
+- claude
+dependencies:
+  apm: []
+  # MCP サーバー依存（トークンは書かない。${ENV_VAR} は install 先マシンの環境変数を参照）
+  # 必要な環境変数は README の「MCP セットアップ」参照
+  mcp:
+    - name: context7
+      registry: false
+      transport: stdio
+      command: bunx
+      args: ["-y", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"]
+# NOTE: skills/my-* は Anthropic built-in の書き起こし（private 利用限定）のため
+# apm pack / publish の配布対象に絶対に含めないこと。配布したいコンテンツができたら
+# auto に戻さず明示リストで指定する（auto は skills/ 配下を全部拾う実測結果あり 2026-07-22）。
+includes:
+  - agents/
+  - skills/smart-commit/
+  - skills/branch/
+  - skills/merge/
+  - skills/senior-pr-review/
+  - skills/compact-prompt/
+  - skills/visual-qa/
+  - skills/ui-tips/
+  - skills/grill-me/
+  - skills/create-routine-issue/
+license: UNLICENSED
+scripts: {}

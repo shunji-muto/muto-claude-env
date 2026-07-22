@@ -1,0 +1,18 @@
+.DS_Store
+apm_modules/
+.env
+*.local
+
+# Anthropic built-in 書き起こしスキル（ライセンス方針により push しない）
+skills/my-simplify/
+skills/my-review/
+skills/my-security-review/
+skills/my-hello/
+# 抽出ダンプ・検証用ディレクトリ
+scratchpad/
+.claude/
+# apm install が生成する配置ファイル
+.mcp.json
+docs/claude-code-web-routine-plan.md
+# 非公開ドキュメント（Anthropic 著作物由来の手順を含むため公開しない）
+docs/maintenance-my-skills.md

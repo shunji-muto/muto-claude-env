@@ -1,0 +1,51 @@
+# Claude Code Web pick-and-implement Routine が触ってはいけないパス一覧。
+# create-routine-issue Skill と routine-guard.yml CI で共通参照する。
+# 変更時は両方の挙動を確認すること。
+#
+# これは常時有効な汎用ベースライン。対象リポジトリの
+# .claude/routine-forbidden-paths.txt は追加マージされる（このファイルを置換しない）。
+# 組織・リポジトリ固有の禁止パスはそちらに書くこと。
+
+# インフラ / IaC
+terraform/
+**/*.tf
+**/*.tfvars
+**/cdktf.json
+# 例: IaC 専用パッケージがある場合は利用側で `packages/<iac-pkg>/**` を追加
+
+# DB スキーマ / migration
+**/schema.prisma
+**/migrations/**
+**/prisma/migrations/**
+**/*.sql
+
+# secrets / credentials
+.env
+.env.*
+**/.env
+**/.env.*
+**/credentials.json
+**/service-account*.json
+secrets/
+**/*.pem
+**/*.key
+
+# CI / repo governance
+.github/workflows/
+.github/CODEOWNERS
+.claude-plugin/marketplace.json
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+
+# submodule 全面禁止
+repositories/
+
+# lock files / dep 追加
+**/bun.lockb
+**/package-lock.json
+**/yarn.lock
+**/package.json
+
+# 判断ログ (人間の責務)
+# 例: ADR / 意思決定ログを Routine に触らせない場合は利用側で `docs/decisions/` 等を追加
