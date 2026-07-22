@@ -74,8 +74,14 @@ fi
 # 3. muto-claude-env 展開 (public repo、認証不要)
 # --global で ~/.apm/ にインストールし ~/.claude/agents/ ~/.claude/skills/ へ展開させる。
 # 省略するとカレントディレクトリの .claude/ に展開されて Claude Code が拾わない。
+# 展開先ディレクトリを事前に作らないと apm が primitive を skip する（skills 側は既存で
+# agents 側だけ未作成のケースで agents だけ展開されない現象を実測 2026-07-22）。
+mkdir -p "$HOME/.claude/agents" "$HOME/.claude/skills"
 log 'installing shunji-muto/muto-claude-env (global scope)'
 apm install --global shunji-muto/muto-claude-env --target claude
+# 展開結果の可視化（Routine ログで agents/skills が入ったか確認できるように）
+log "installed agents: $(ls -1 "$HOME/.claude/agents" 2>/dev/null | wc -l | tr -d ' ')"
+log "installed skills: $(ls -1 "$HOME/.claude/skills" 2>/dev/null | wc -l | tr -d ' ')"
 
 # 4. ~/.claude/skills/create-routine-issue を muto-claude-env 展開先へ symlink
 # apm の展開先パス取得手段は実装時点で未確定。以下を順に試す。
