@@ -72,8 +72,10 @@ if ! command -v apm >/dev/null 2>&1; then
 fi
 
 # 3. muto-claude-env 展開 (public repo、認証不要)
-log 'installing shunji-muto/muto-claude-env'
-apm install shunji-muto/muto-claude-env --target claude
+# --global で ~/.apm/ にインストールし ~/.claude/agents/ ~/.claude/skills/ へ展開させる。
+# 省略するとカレントディレクトリの .claude/ に展開されて Claude Code が拾わない。
+log 'installing shunji-muto/muto-claude-env (global scope)'
+apm install --global shunji-muto/muto-claude-env --target claude
 
 # 4. ~/.claude/skills/create-routine-issue を muto-claude-env 展開先へ symlink
 # apm の展開先パス取得手段は実装時点で未確定。以下を順に試す。
