@@ -79,7 +79,19 @@ apm install --global --force shunji-muto/muto-claude-env --target claude
 log "installed agents: $(ls -1 "$HOME/.claude/agents" 2>/dev/null | wc -l | tr -d ' ')"
 log "installed skills: $(ls -1 "$HOME/.claude/skills" 2>/dev/null | wc -l | tr -d ' ')"
 
-# 4. env 警告 (fail はしない)
+# 4. AGENTS.md / CLAUDE.md を ~/.claude/ に配置
+# apm は root 直下の *.md を primitive として扱わないため apm install では展開されない。
+# raw GitHub から直接取得して置く（public リポなので認証不要）。
+RAW_BASE='https://raw.githubusercontent.com/shunji-muto/muto-claude-env/main'
+for f in AGENTS.md CLAUDE.md; do
+  if curl --fail --silent --show-error --location -o "$HOME/.claude/$f" "$RAW_BASE/$f"; then
+    log "placed ~/.claude/$f"
+  else
+    warn "failed to fetch $f"
+  fi
+done
+
+# 5. env 警告 (fail はしない)
 for var in CONTEXT7_API_KEY; do
   if [[ -z "${!var:-}" ]]; then
     warn "$var is not set. Some MCP servers may not work."
