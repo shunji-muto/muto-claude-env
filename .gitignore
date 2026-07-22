@@ -4,10 +4,10 @@ apm_modules/
 *.local
 
 # Anthropic built-in 書き起こしスキル（ライセンス方針により push しない）
-skills/my-simplify/
-skills/my-review/
-skills/my-security-review/
-skills/my-hello/
+.apm/skills/my-simplify/
+.apm/skills/my-review/
+.apm/skills/my-security-review/
+.apm/skills/my-hello/
 # 抽出ダンプ・検証用ディレクトリ
 scratchpad/
 .claude/

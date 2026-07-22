@@ -17,19 +17,19 @@ dependencies:
       transport: stdio
       command: bunx
       args: ["-y", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"]
-# NOTE: skills/my-* は Anthropic built-in の書き起こし（private 利用限定）のため
-# apm pack / publish の配布対象に絶対に含めないこと。配布したいコンテンツができたら
-# auto に戻さず明示リストで指定する（auto は skills/ 配下を全部拾う実測結果あり 2026-07-22）。
+# NOTE: .apm/skills/my-* は Anthropic built-in の書き起こし（private 利用限定・gitignore 済）。
+# includes: auto は gitignore を無視して pack する（実測 2026-07-22）ため使えない。
+# 配布したいものだけ明示リスト化する。
 includes:
-  - agents/
-  - skills/smart-commit/
-  - skills/branch/
-  - skills/merge/
-  - skills/senior-pr-review/
-  - skills/compact-prompt/
-  - skills/visual-qa/
-  - skills/ui-tips/
-  - skills/grill-me/
-  - skills/create-routine-issue/
+  - .apm/agents/
+  - .apm/skills/smart-commit/
+  - .apm/skills/branch/
+  - .apm/skills/merge/
+  - .apm/skills/senior-pr-review/
+  - .apm/skills/compact-prompt/
+  - .apm/skills/visual-qa/
+  - .apm/skills/ui-tips/
+  - .apm/skills/grill-me/
+  - .apm/skills/create-routine-issue/
 license: UNLICENSED
 scripts: {}
