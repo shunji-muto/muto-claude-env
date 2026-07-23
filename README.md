@@ -72,6 +72,32 @@ curl -fsSL https://raw.githubusercontent.com/shunji-muto/muto-claude-env/main/bi
 - gh CLI 認証（GitHub MCP で代替）
 - 対象リポジトリの clone / 依存インストール（Web Routine 側の GitHub 連携が担う）
 
+## Routines
+
+dinii-internal-tools の Definition of Ready を満たした Issue を自動実装し、draft PR まで作るための routine 群。
+
+現行の routine: `routines/pick-and-implement.md`
+
+- 想定 cron: 平日 6:00 / 9:00 / 12:00 JST
+- pickup 条件: `label:"routine:ready" AND label:"shunji-muto-issue" AND -label:"routine:in-progress"`
+- flow: Pickup → Branch → Plan → Gate 1 (senior-pr-review) → Implementation → Gate 2 (simplify/review/security-review) → Adversarial verify → Fix loop → draft PR → Slack notify
+
+Web Routine への登録方法:
+
+1. `routines/pick-and-implement.md` の内容をコピー
+2. Claude Code Web の Routine 設定画面に貼り付け
+3. cron を設定（上記想定スケジュール）
+
+関連 skill:
+
+- `create-routine-issue` — Issue を対話的に起票し、Definition of Ready を保証する
+- `senior-pr-review` — routine 内から Gate 1 で呼ばれる
+
+制約:
+
+- dinii-internal-tools 専用（owner label `shunji-muto-issue` を hard-code）
+- Web Routine の secret 機構が未実装のため、対象リポは public のみ（本パッケージ自体も public 化済）
+
 ## 注意
 
 - **public リポジトリ**。シークレット・トークン・社内固有情報（バケット名 / プロジェクト ID / 社内リポ名 / 実在メール）はコミット禁止。
