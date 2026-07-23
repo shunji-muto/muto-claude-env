@@ -31,5 +31,7 @@ includes:
   - .apm/skills/ui-tips/
   - .apm/skills/grill-me/
   - .apm/skills/create-routine-issue/
+  - bin/
+  - routines/
 license: UNLICENSED
 scripts: {}
